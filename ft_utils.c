@@ -10,39 +10,46 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "print.h"
+#include "ft_printf.h"
 
-void	ft_putchar_fd(char c, int fd)
+int	ft_putchar_fd(char c, int fd, int *res)
 {
+	if (res)
+		*res = *res + 1;
 	write(fd, &c, 1);
+	return (1);
 }
 
-void	ft_putstr_fd(char *s, int fd)
+int	ft_putstr_fd(char *s, int fd)
 {
+	int		res;
+
+	res = 0;
 	if (!s)
-		return ;
-	while (*s)
+		return (ft_putstr_fd((char *)"(null)", 1));
+	while (s[res])
 	{
-		ft_putchar_fd(*s, fd);
-		s++;
+		ft_putchar_fd(s[res], fd, 0);
+		res++;
 	}
+	return (res);
 }
 
-void	ft_putnbr_fd(long n, int fd)
+int	ft_putnbr_fd(long n, int fd, int unsign, int *res)
 {
-	long int	nb;
-
-	nb = n;
-	if (nb < 0)
+	if (unsign)
+		n = (unsigned int)n;
+	if (n < 0)
 	{
-		nb *= -1;
-		ft_putchar_fd('-', fd);
+		n *= -1;
+		ft_putchar_fd('-', fd, res);
 	}
-	if (nb >= 10)
+	if (n >= 10)
 	{
-		ft_putnbr_fd(nb / 10, fd);
-		ft_putnbr_fd(nb % 10, fd);
+		ft_putnbr_fd((long)n / 10, fd, unsign, res);
+		ft_putnbr_fd((long)n % 10, fd, unsign, res);
 	}
 	else
-		ft_putchar_fd(nb + 48, fd);
+		ft_putchar_fd((long)n + 48, fd, res);
+	return (*res);
 }

@@ -10,44 +10,54 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "print.h"
+#include "ft_printf.h"
 
-void	ft_handle(char c, va_list arg)
+int	ft_handle(char c, va_list arg)
 {
-	if (c == 'c' || c == '%')
-		ft_putchar_fd((char)va_arg(arg, int), 1);
+	int	res;
+
+	res = 0;
+	if (c == '%')
+		res = ft_putchar_fd('%', 1, 0);
+	if (c == 'c')
+		res = ft_putchar_fd((char)va_arg(arg, int), 1, 0);
 	if (c == 's')
-		ft_putstr_fd((char *)va_arg(arg, char *), 1);
+		res = ft_putstr_fd((char *)va_arg(arg, char *), 1);
 	if (c == 'p')
-		ft_print_ptr((char *)va_arg(arg, char *));
+		res = ft_print_ptr((void *)va_arg(arg, void *));
 	if (c == 'd' || c == 'i' || c == 'u')
-		ft_putnbr_fd((long)va_arg(arg, int), 1);
+		ft_putnbr_fd((long)va_arg(arg, int), 1, c == 'u', &res);
 	if (c == 'x')
-		ft_print_hex((long)va_arg(arg, long), 0);
+		res = ft_print_hex((long)va_arg(arg, long), 0);
 	if (c == 'X')
-		ft_print_hex((long)va_arg(arg, int), 1);
+		res = ft_print_hex((long)va_arg(arg, int), 1);
+	return (res);
 }
 
 int	ft_printf(const char *p, ...)
 {
 	int		i;
 	va_list	arg;
+	int		size;
 
+	size = 0;
 	va_start(arg, p);
-	i = 0;
+	i = -1;
 	if (!p)
 		return (-1);
-	while (p[i])
+	while (p[++i])
 	{
 		if (p[i] == '%')
 		{
-			ft_handle(p[i + 1], arg);
+			size += ft_handle(p[i + 1], arg);
 			i++;
 		}
 		else
-			ft_putchar_fd(p[i], 1);
-		i++;
+		{
+			ft_putchar_fd(p[i], 1, 0);
+			size++;
+		}
 	}
 	va_end(arg);
-	return (0);
+	return (size);
 }

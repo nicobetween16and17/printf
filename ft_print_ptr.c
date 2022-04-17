@@ -10,10 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "print.h"
+#include "ft_printf.h"
 
-void	ft_print_ptr(void *s)
+int	ft_print_ptr(void *s)
 {
+	unsigned long	res;
+	int				res2;
+
+	res2 = 2;
+	res = (unsigned long) s;
 	ft_putstr_fd("0x", 1);
-	printf("%d", s);
+	ft_putnbr_base(res, "0123456789abcdef", &res2);
+	return (res2);
 }

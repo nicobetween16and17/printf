@@ -13,7 +13,7 @@ RM			=	rm -f
 
 ARRCS		=	ar rcs
 
-INCS		=	print.h
+INCS		=	ft_printf.h
 
 OBJS		=	${SRCS:.c=.o}
 

@@ -10,24 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "print.h"
+#include "ft_printf.h"
 
-void	ft_print_hex_char(char c, const char *s)
+int	*ft_putnbr_base(unsigned long s, char *base, int *res)
 {
-	ft_putchar_fd(s[c % 16], 1);
-	ft_putchar_fd(s[c / 16], 1);
+	if (s >= 16)
+	{
+		ft_putnbr_base(s / 16, base, res);
+		ft_putnbr_base(s % 16, base, res);
+	}
+	else
+	{
+		ft_putchar_fd(base[s], 1, res);
+	}
+	return (res);
 }
 
-void	ft_print_hex(long s, int cas)
+int	ft_print_hex(unsigned int s, int cas)
 {
 	const char	*base;
+	int			res;
 
+	res = 0;
 	base = "0123456789abcdef";
 	if (cas)
 		base = "0123456789ABCDEF";
-	while (*s != '\0')
-	{
-		ft_print_hex_char(*s, (const char*)base);
-		s++;
-	}
+	ft_putnbr_base(s, (char *)base, &res);
+	return (res);
 }
